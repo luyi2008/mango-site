@@ -1,27 +1,30 @@
-import { useEffect, useState } from 'react'
-import { copy, readLang, storeLang } from '../copy'
+import { useEffect } from 'react'
+import { useTranslation } from 'react-i18next'
+import { documentLang } from '../i18n'
 import './Home.css'
 
 export default function Home() {
-  const [lang, setLang] = useState(readLang)
-  const text = copy[lang]
+  const { t, i18n } = useTranslation()
+  const language = i18n.resolvedLanguage === 'en' ? 'en' : 'zh'
 
   useEffect(() => {
-    document.documentElement.lang = text.code
-    document.title = text.title
-    const meta = document.querySelector('meta[name="description"]')
-    if (meta) meta.setAttribute('content', text.description)
-    storeLang(lang)
-  }, [lang, text])
+    function apply() {
+      const next = i18n.resolvedLanguage === 'en' ? 'en' : 'zh'
+      document.documentElement.lang = documentLang(next)
+      document.title = t('title')
+      const meta = document.querySelector('meta[name="description"]')
+      if (meta) meta.setAttribute('content', t('description'))
+    }
 
-  function choose(next) {
-    if (next !== lang) setLang(next)
-  }
+    apply()
+    i18n.on('languageChanged', apply)
+    return () => i18n.off('languageChanged', apply)
+  }, [i18n, t])
 
   return (
-    <div className="site" lang={text.code}>
+    <div className="site" lang={documentLang(language)}>
       <a className="skip" href="#content">
-        {text.skip}
+        {t('skip')}
       </a>
 
       <header className="site-header">
@@ -29,23 +32,23 @@ export default function Home() {
           <img
             className="site-lockup"
             src="/brand/mango-f1-horizontal.svg"
-            alt={text.logoAlt}
+            alt={t('logoAlt')}
           />
         </a>
-        <div className="lang-switch" role="group" aria-label={text.languageLabel}>
+        <div className="lang-switch" role="group" aria-label={t('languageLabel')}>
           <button
             type="button"
             lang="zh-CN"
-            aria-pressed={lang === 'zh'}
-            onClick={() => choose('zh')}
+            aria-pressed={language === 'zh'}
+            onClick={() => i18n.changeLanguage('zh')}
           >
             中文
           </button>
           <button
             type="button"
             lang="en"
-            aria-pressed={lang === 'en'}
-            onClick={() => choose('en')}
+            aria-pressed={language === 'en'}
+            onClick={() => i18n.changeLanguage('en')}
           >
             English
           </button>
@@ -59,36 +62,36 @@ export default function Home() {
             src="/brand/mango-f1-vertical.svg"
             alt="MANGO"
           />
-          <h1 id="tagline">{text.tagline}</h1>
+          <h1 id="tagline">{t('tagline')}</h1>
           <p className="site-domain">mangguo.cloud</p>
           <div className="site-actions">
             <a className="btn btn-primary" href="#work">
-              {text.seeWork}
+              {t('seeWork')}
             </a>
             <a className="btn btn-quiet" href="#contact">
-              {text.contactCta}
+              {t('contactCta')}
             </a>
           </div>
         </section>
 
         <section className="site-work" id="work" aria-labelledby="offer">
           <div className="site-measure">
-            <h2 id="offer">{text.offerTitle}</h2>
-            <p>{text.offerBody}</p>
+            <h2 id="offer">{t('offerTitle')}</h2>
+            <p>{t('offerBody')}</p>
           </div>
         </section>
 
         <section className="site-contact" id="contact" aria-labelledby="reach">
           <div className="site-measure">
-            <h2 id="reach">{text.contactTitle}</h2>
-            <p>{text.company}</p>
+            <h2 id="reach">{t('contactTitle')}</h2>
+            <p>{t('company')}</p>
             <p className="site-domain">mangguo.cloud</p>
           </div>
         </section>
       </main>
 
       <footer className="site-footer">
-        <p>{text.footer}</p>
+        <p>{t('footer')}</p>
       </footer>
     </div>
   )
