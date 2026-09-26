@@ -1,4 +1,19 @@
-html, body {
-    margin: 0;
-    padding: 0;
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  color-scheme: light;
+}
+
+body {
+  background: #ffffff;
+  color: #1c1b18;
+}
+
+::selection {
+  background: #f6c453;
+  color: #1c1b18;
 }
