@@ -1,10 +1,27 @@
+import { useEffect, useState } from 'react'
+import { copy, readLang, storeLang } from '../copy'
 import './Home.css'
 
 export default function Home() {
+  const [lang, setLang] = useState(readLang)
+  const text = copy[lang]
+
+  useEffect(() => {
+    document.documentElement.lang = text.code
+    document.title = text.title
+    const meta = document.querySelector('meta[name="description"]')
+    if (meta) meta.setAttribute('content', text.description)
+    storeLang(lang)
+  }, [lang, text])
+
+  function choose(next) {
+    if (next !== lang) setLang(next)
+  }
+
   return (
-    <div className="site">
+    <div className="site" lang={text.code}>
       <a className="skip" href="#content">
-        跳到正文
+        {text.skip}
       </a>
 
       <header className="site-header">
@@ -12,9 +29,27 @@ export default function Home() {
           <img
             className="site-lockup"
             src="/brand/mango-f1-horizontal.svg"
-            alt="芒果云端科技"
+            alt={text.logoAlt}
           />
         </a>
+        <div className="lang-switch" role="group" aria-label={text.languageLabel}>
+          <button
+            type="button"
+            lang="zh-CN"
+            aria-pressed={lang === 'zh'}
+            onClick={() => choose('zh')}
+          >
+            中文
+          </button>
+          <button
+            type="button"
+            lang="en"
+            aria-pressed={lang === 'en'}
+            onClick={() => choose('en')}
+          >
+            English
+          </button>
+        </div>
       </header>
 
       <main id="content">
@@ -24,42 +59,36 @@ export default function Home() {
             src="/brand/mango-f1-vertical.svg"
             alt="MANGO"
           />
-          <h1 id="tagline">用 AI 让生意更省事</h1>
+          <h1 id="tagline">{text.tagline}</h1>
           <p className="site-domain">mangguo.cloud</p>
           <div className="site-actions">
             <a className="btn btn-primary" href="#work">
-              了解方案
+              {text.seeWork}
             </a>
             <a className="btn btn-quiet" href="#contact">
-              联系我们
+              {text.contactCta}
             </a>
           </div>
         </section>
 
         <section className="site-work" id="work" aria-labelledby="offer">
           <div className="site-measure">
-            <h2 id="offer">给公司和商家做能用的 AI 工具</h2>
-            <p>
-              省下时间，把运营成本降下来，并且让人当天就能上手。北京芒果云端科技有限公司做的就是这几件事。
-            </p>
-            <p className="site-en">
-              We build practical AI tools for companies and merchants.
-            </p>
+            <h2 id="offer">{text.offerTitle}</h2>
+            <p>{text.offerBody}</p>
           </div>
         </section>
 
         <section className="site-contact" id="contact" aria-labelledby="reach">
           <div className="site-measure">
-            <h2 id="reach">联系我们</h2>
-            <p>北京芒果云端科技有限公司</p>
-            <p className="site-en">Beijing Mango Cloud Technology Co., Ltd.</p>
+            <h2 id="reach">{text.contactTitle}</h2>
+            <p>{text.company}</p>
             <p className="site-domain">mangguo.cloud</p>
           </div>
         </section>
       </main>
 
       <footer className="site-footer">
-        <p>© 2026 北京芒果云端科技有限公司</p>
+        <p>{text.footer}</p>
       </footer>
     </div>
   )

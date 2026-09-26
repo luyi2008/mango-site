@@ -38,7 +38,46 @@
 .site-header {
   display: flex;
   align-items: center;
+  justify-content: space-between;
+  gap: 16px;
   padding: 28px clamp(20px, 5vw, 56px);
+}
+
+.lang-switch {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.lang-switch button {
+  appearance: none;
+  margin: 0;
+  padding: 8px 10px 6px;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  border-radius: 0;
+  background: transparent;
+  color: var(--sage);
+  font-family: var(--font-cn);
+  font-size: 0.95rem;
+  font-weight: 400;
+  line-height: 1.2;
+  min-height: 44px;
+  cursor: pointer;
+}
+
+.lang-switch button[lang='en'] {
+  font-family: var(--font-en);
+}
+
+.lang-switch button[aria-pressed='true'] {
+  color: var(--ink);
+  font-weight: 500;
+  border-bottom-color: var(--ink);
+}
+
+.lang-switch button:hover {
+  color: var(--ink);
 }
 
 .site-brand {
@@ -59,7 +98,7 @@
   justify-content: center;
   text-align: center;
   padding: 24px 24px 72px;
-  min-height: calc(100svh - 92px);
+  min-height: calc(100svh - 100px);
 }
 
 .site-mark {
@@ -70,7 +109,7 @@
 
 .site-hero h1 {
   margin: 36px 0 0;
-  max-width: 16em;
+  max-width: min(16em, 100%);
   font-family: var(--font-cn);
   font-size: clamp(1.5rem, 2.6vw, 2rem);
   font-weight: 500;
@@ -158,12 +197,17 @@
   max-width: 36em;
 }
 
-.site-en {
-  margin-top: 12px;
+.site[lang='en'] {
   font-family: var(--font-en);
-  font-size: 1rem;
-  line-height: 1.6;
-  color: var(--sage);
+}
+
+.site[lang='en'] h1,
+.site[lang='en'] h2 {
+  font-family: var(--font-display);
+}
+
+.site[lang='en'] .btn {
+  font-family: var(--font-en);
 }
 
 .site-contact .site-domain {
@@ -204,7 +248,12 @@
   }
 
   .site-lockup {
-    height: 30px;
+    height: 28px;
+  }
+
+  .lang-switch button {
+    padding-left: 8px;
+    padding-right: 8px;
   }
 
   .site-hero {
